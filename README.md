@@ -79,7 +79,8 @@ expense-tracker-python/
 │   └── totals-window.png
 ├── requirements.txt
 ├── .gitignore
-└── README.md
+├── README.md
+└── article.md
 ```
 
 ---
