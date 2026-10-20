@@ -37,7 +37,7 @@ Expense Tracker is a desktop application built with **Python**, **Tkinter**, and
 
 * Add expenses with a **date**, **category**, **description**, and **amount**.
 * Create, rename, move, and delete categories and descriptions.
-* View all saved expenses in a sortable table.
+* View all saved expenses in a table, with records organized by date.
 * View spending totals by month, year, category, and description.
 * Store all data locally in CSV and JSON files.
 * Simple and intuitive desktop interface built with Tkinter.
