@@ -1,118 +1,168 @@
-
-# Building a Personal Expense Tracker with Python and Tkinter
+# Building a Personal Expense Tracker with Python, Tkinter, and Pandas
 
 ## Introduction
 
 Keeping track of personal expenses can help people understand their spending habits and organize their finances. I built this Expense Tracker as a desktop application using Python, Tkinter, and Pandas.
 
-The application allows users to record expenses, organize them into categories, manage expense descriptions, and review spending summaries across different periods and categories. It stores data locally in CSV and JSON files, so it can work offline without requiring an online account or database server.
+The application allows users to record expenses, organize them into categories, manage descriptions, and review spending summaries across different periods. It stores information locally in CSV and JSON files, so it works without an online account or database server.
 
-This project gave me an opportunity to work with Python functions, desktop GUI development, file handling, data validation, and data analysis.
+The project began as a relatively simple programming exercise. During development, I gradually expanded its functionality, improved the interface, and fixed several problems discovered through testing. It became an opportunity to practice desktop GUI development, file handling, data validation, data organization, and data analysis.
 
-## Features
+## How the Project Developed
 
-### 1. Recording expenses
+### 1. Starting with a simple CSV expense tracker
 
-Users can enter four pieces of information for each expense:
+The original assignment was to build a small desktop application that could record daily expenses.
+
+The first version had four input fields:
 
 - **Date** — when the expense occurred.
-- **Category** — the general type of expense, such as Food or Transport.
-- **Description** — a more specific detail, such as Groceries or Bus Ticket.
-- **Amount** — the cost of the expense.
+- **Category** — the general type of expense.
+- **Description** — a more specific explanation.
+- **Amount** — how much was spent.
 
-The application checks that all fields are filled in, validates the date and amount, and saves the new expense when the input is accepted.
+Users could add an expense, save it to a CSV file, and see the overall amount spent.
 
-### 2. Managing categories and descriptions
+Initially, the CSV file was stored in the user's Downloads folder. The application was then extended with a separate window containing a scrollable table, allowing users to view their saved expense records.
 
-The application includes default categories such as Food, Transport, Entertainment, Utilities, Shopping, Health, Education, and Other.
+### 2. Improving categories and chronological sorting
 
-Users can also customize their categories by adding, renaming, deleting, and moving categories or descriptions. This makes the application more flexible than a tracker with a fixed list of expense types.
+After testing the first version, I identified several improvements that would make the application more practical.
 
-Category information is stored in a JSON file, allowing custom categories and descriptions to persist between sessions.
+I wanted users to select common categories and descriptions from dropdown menus without being restricted to predefined options. The solution was to use editable comboboxes: users could select an existing entry or type something new.
 
-### 3. Viewing recorded expenses
+Another improvement concerned the order of expense records. The original application appended every new expense to the end of the CSV file. This was inconvenient when entering an expense from an earlier date.
 
-The application provides a separate window displaying saved expenses in a table.
+I changed the saving process so that records are sorted chronologically. An older expense is therefore placed in its correct position rather than appearing after newer entries.
 
-The table includes the date, category, description, and amount. Scrollbars make it easier to navigate the displayed records.
+### 3. Expanding the spending summaries
 
-### 4. Analyzing spending
+The next major improvement was the analysis functionality.
 
-The Expense Tracker calculates totals across several dimensions:
+Instead of displaying only the overall amount spent, I wanted users to understand how their expenses were distributed.
 
-- By month
-- By year
-- By category
-- By description
-- By category and year
-- By category and month
+The summary window was expanded with separate tabs:
 
-The category and description summaries can also be sorted by amount or alphabetically. These views help users understand where their money is going and identify their largest expense categories.
+- **By Month** — total spending for each month.
+- **By Year** — total spending for each year.
+- **By Category** — total spending for each category.
+- **By Description** — total spending for each description.
+- **By Category & Year** — spending for each category in each year.
+- **By Category & Month** — spending for each category in each month.
 
-### 5. Local data storage
+Pandas made these calculations easier through grouping and aggregation operations.
 
-The application uses two files:
+I also added sorting options to the category and description summaries, allowing users to organize the results alphabetically or by spending amount.
 
-- `expenses.csv` stores the recorded expenses.
-- `categories.json` stores categories and their associated descriptions.
+### 4. Debugging the summary calculations
 
-The files are saved in a `data/` directory next to the Python program. The application creates this directory automatically if it does not already exist.
+The summary functionality required several rounds of testing and debugging.
 
-Using local files keeps the project relatively simple and avoids the need to configure a separate database.
+One issue involved floating-point precision. Some totals appeared with unnecessary decimal digits, such as `126.10000000000001`, instead of `126.10`. I addressed the display problem by rounding monetary values and formatting amounts to two decimal places.
+
+Another challenge appeared when implementing the sorting options for the category and description tabs. The initial code did not consistently handle the different structures returned by Pandas. Some attempts produced incorrect values or caused errors when the program tried to convert summary data into numbers.
+
+The solution was to introduce helper functions that normalize summary data into simple label-and-value pairs before displaying or sorting it.
+
+These problems showed me that calculating a total is only part of data analysis. The program must also handle the resulting data structure correctly and present the results in a form that users can understand.
+
+### 5. Creating a category management window
+
+As the application became more flexible, I wanted users to manage their categories without editing files manually.
+
+I added a dedicated **Manage Categories** window with the ability to:
+
+- Add new categories.
+- Rename existing categories.
+- Delete categories.
+- Add and delete descriptions.
+- Rename descriptions.
+- Move descriptions between categories.
+
+This also introduced a more organized relationship between categories and descriptions. For example, a description such as "Restaurant" belongs to "Food", while "Bus Ticket" belongs to "Transport".
+
+During testing, I encountered problems with dialog windows appearing behind the main application and selections disappearing from the description list. I refined the window's dialog handling and list-selection logic so that the management operations behaved more consistently.
+
+### 6. Organizing local data storage
+
+The original application stored its files in the Downloads folder. This worked, but it was not ideal for a project intended to be maintained in a GitHub repository.
+
+I changed the file setup to use `pathlib` and the location of the Python script:
+
+```python
+BASE_DIR = Path(__file__).parent
+DATA_DIR = BASE_DIR / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
+csv_file = DATA_DIR / "expenses.csv"
+categories_file = DATA_DIR / "categories.json"
+```
+
+The application now creates a `data/` directory beside the program automatically.
+
+This keeps the expense records and category settings together with the application, rather than relying on a fixed location in the user's home directory.
+
+## Main Features
+
+The finished application includes:
+
+- Adding expenses with dates, categories, descriptions, and amounts.
+- Editable category and description dropdown menus.
+- Automatic saving and chronological sorting of expense records.
+- A table displaying all recorded expenses.
+- Detailed summaries by month, year, category, and description.
+- Combined summaries by category and month or year.
+- Sorting options for category and description totals.
+- A category management window for editing categories and descriptions.
+- Local CSV and JSON storage.
 
 ## Technologies Used
 
-**Python** — the main programming language used to implement the application's logic.
+**Python** — the main programming language used for the application's logic.
 
-**Tkinter and ttk** — used to create the desktop interface, input fields, dropdown menus, tables, tabs, and additional windows.
+**Tkinter and ttk** — used to create the desktop interface, input fields, dropdown menus, tables, tabs, dialogs, and additional windows.
 
-**Pandas** — used to load expense records, process dates and amounts, combine new records with existing data, and calculate grouped spending totals.
+**Pandas** — used to load and save expense records, process dates and amounts, sort records, and calculate grouped spending totals.
 
-**JSON** — used to save and load customizable categories and descriptions.
+**JSON** — used to store customizable categories and their associated descriptions.
 
-**Pathlib** — used to define file paths and manage the application's data directory.
+**Pathlib** — used to manage file paths and create the application's local data directory.
 
 ## How the Application Works
 
-### 1. Setting up files and directories
+### Loading and saving expenses
 
-The program uses `Path(__file__).parent` to identify the directory containing the Python script. It then defines the data directory and the paths for the expense and category files.
+The `load_expenses()` function reads the CSV file into a Pandas DataFrame. It converts the date column into datetime values and the amount column into numeric values.
 
-This keeps the storage locations organized relative to the application instead of relying on a particular user's Downloads folder or another fixed location.
+The `save_expenses()` function prepares the data, rounds monetary amounts to two decimal places, sorts records by date, and writes the updated DataFrame back to CSV.
 
-### 2. Loading and saving categories
+When a user adds an expense, the application creates a new row, combines it with the existing records, and saves the updated data.
 
-The `load_categories()` function loads the category mapping from `categories.json`. If the file does not exist, the application creates one using the default categories.
+### Managing categories
 
-The `save_categories()` function organizes the category data and writes it back to JSON. This allows changes made through the category management window to be saved for future sessions.
+The application uses a dictionary to represent the relationship between categories and descriptions.
 
-### 3. Loading and saving expenses
+The `load_categories()` function reads this information from `categories.json`. If the file does not exist, the application creates it using the default categories.
 
-The `load_expenses()` function reads saved records from the CSV file and converts the date and amount columns into appropriate data types.
+The `save_categories()` function writes changes back to JSON, allowing customized categories and descriptions to remain available between sessions.
 
-The `save_expenses()` function prepares the data, rounds amounts to two decimal places, sorts records by date, and writes the results back to CSV.
+### Calculating summaries
 
-When a user adds an expense, the application creates a new row and combines it with the existing records before saving the updated data.
+Pandas grouping operations calculate totals across different dimensions.
 
-### 4. Calculating spending summaries
+For example, grouping records by month produces monthly totals, while grouping by category shows how much was spent in each category.
 
-Pandas makes it possible to group expense records and calculate totals without manually processing every record.
+The application uses these results to populate tables in the summary window. Separate functions prepare the category and description summaries so that their values can be displayed and sorted correctly.
 
-For example, grouping by month makes it possible to calculate monthly spending, while grouping by category shows how much was spent in each expense category.
+### Building the interface
 
-The application uses these grouped results to populate tables in a separate summary window. Multiple tabs organize the results so that users can explore different views of their spending.
+Tkinter handles the application's windows and user interactions. Functions connected to buttons, dropdown events, and dialogs perform the different operations.
 
-### 5. Building the graphical interface
-
-Tkinter provides the main application window, where users enter expense details and access the application's features.
-
-Separate windows display the expense table, detailed summaries, and category management tools. Functions connected to buttons and dropdown events handle user interactions.
-
-This structure separates many of the application's actions into individual functions, making the code easier to follow and maintain.
+The main window is used to enter expenses and access the application's features. Additional windows display expense records, detailed summaries, and category management tools.
 
 ## Project Structure
 
-The repository can be organized as follows:
+The repository is organized as follows:
 
 ```text
 expense-tracker-python/
@@ -130,45 +180,46 @@ expense-tracker-python/
     └── totals-window.png
 ```
 
-The `data/` files may be created by the application when it runs, so they do not necessarily need to be committed to the repository. For a public portfolio, fictional sample data is preferable to real personal financial records.
+The application creates the `data/` directory and its files when needed. For a public portfolio, fictional sample expenses are preferable to personal financial records.
 
 ## Challenges and Lessons Learned
 
-One of the main challenges in this project was organizing expense information so that it could be used both for individual records and for summaries.
+This project taught me that developing a useful application involves much more than implementing its initial requirements.
 
-Working with Pandas helped me understand how to convert data types, sort records, group rows, and calculate totals. Tkinter introduced me to event-driven programming, where functions respond to button clicks and other user interactions.
+The development process included improving the user interface, organizing related data, handling dates and monetary values, debugging Pandas operations, and refining interactions between multiple Tkinter windows.
 
-Another important part was keeping category information separate from expense records. Using JSON for categories and CSV for expenses gave each file a clear purpose.
+I also learned the importance of separating different types of information. CSV provides a straightforward way to store expense records, while JSON is suitable for the category and description configuration.
 
-I also learned that input validation and file handling are important in desktop applications. Dates and amounts need to be checked, and saved data must be loaded consistently so that the application can continue working across sessions.
+Testing was an important part of the process. Some features worked individually but needed further adjustments when combined with the rest of the application. Debugging the summary tabs and category management window helped me understand the importance of checking how data and GUI events interact.
 
 ## Limitations and Future Improvements
 
-Although the application covers the main functions of a basic expense tracker, there are several areas where it could be improved:
+Although the application covers the main functions of a basic expense tracker, several improvements are possible:
 
-- **More robust validation:** enforce a consistent date format and validate amounts more thoroughly, including whether negative amounts should be allowed.
-- **Safer file handling:** provide clearer messages for corrupted CSV or JSON files and unexpected file access errors.
-- **Improved table interaction:** add sorting by clicking column headings and filtering expenses by date or category.
-- **Visual reports:** add charts showing spending patterns over time and spending by category.
-- **Budget tracking:** allow users to set monthly budgets and compare spending against them.
-- **Export options:** generate Excel or PDF reports.
-- **Currency settings:** make the currency symbol configurable instead of always displaying dollars.
-- **Dependency documentation:** specify compatible Python and Pandas versions so that installation is reproducible.
+- Add charts showing spending patterns over time and by category.
+- Introduce monthly budgets and remaining-balance tracking.
+- Add filtering by date range, category, or description.
+- Export summaries to Excel or PDF.
+- Make the currency configurable.
+- Improve validation and error handling for damaged or unexpected data files.
+- Add backup and restore functionality.
 
-These improvements could make the application more convenient and reliable for everyday use.
+These improvements could make the application more convenient and reliable.
 
 ## AI-Assisted Development
 
-AI tools can be useful during software development for exploring implementation approaches, understanding unfamiliar functions, debugging issues, and improving documentation.
+AI tools were used during parts of the development process to explore implementation approaches, understand unfamiliar functions, troubleshoot errors, and improve the documentation.
 
-Where AI assistance was used during this project, I treat the generated suggestions as material to review and test rather than assuming that they are automatically correct. Being able to explain the code, verify its behavior, and recognize its limitations is an important part of developing programming skills.
+The suggestions were reviewed and tested rather than treated as automatically correct. The debugging process was particularly useful for learning how to investigate errors, understand Pandas data structures, and refine Tkinter interactions.
 
-*Adjust this section to accurately describe the assistance you actually used.*
+Being able to explain the code, verify its behavior, and recognize its limitations remains an important part of developing programming skills.
 
 ## Conclusion
 
-The Expense Tracker is a practical Python project that combines desktop GUI development, file handling, data management, and basic financial analysis.
+The Expense Tracker evolved from a simple CSV-based exercise into a more complete desktop application.
 
-It demonstrates how Tkinter can provide a simple interface while Pandas handles data processing and JSON supports customizable application settings. The project also provides a foundation for future improvements, such as charts, budgets, filtering, and report generation.
+It combines Tkinter for the graphical interface, Pandas for data processing and analysis, CSV for expense records, and JSON for customizable categories.
 
-Building this application helped me practice turning a real-world problem into a working software project while identifying areas where validation, usability, and maintainability could be improved.
+The most valuable part of the project was the iterative development process: starting with a small working program, identifying practical limitations, adding features, testing them, and correcting problems along the way.
+
+It provided practical experience in turning a simple programming task into a structured application that can be maintained and improved over time.
