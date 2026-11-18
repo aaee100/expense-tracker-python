@@ -1,21 +1,14 @@
+# Expense Tracker (Python + Tkinter)
 
-
-
-
-
-
-
-# 💰 Expense Tracker (Python + Tkinter)
-
-![Python](https://img.shields.io/badge/Python-3.7-blue)
-![Tkinter](https://img.shields.io/badge/GUI-Tkinter-green)
-![Pandas](https://img.shields.io/badge/Data-Pandas-orange)
+![Python](https://img.shields.io/badge/Python-3-blue)
+![GUI](https://img.shields.io/badge/GUI-Tkinter-green)
+![Data](https://img.shields.io/badge/Data-Pandas-orange)
 
 ## About the Project
 
-Expense Tracker is a desktop application built with **Python**, **Tkinter**, and **Pandas** for recording and organizing personal expenses. The application allows users to categorize expenses, manage descriptions, and view monthly, yearly, category-based, and description-based spending summaries. All data is stored locally in **CSV** and **JSON** files, so the app works completely offline.
+Expense Tracker is a desktop application built with **Python**, **Tkinter**, and **Pandas** for recording and organizing personal expenses.
 
----
+Users can add expenses, manage categories and descriptions, view all recorded transactions, and analyze spending through detailed summaries. The application stores its data locally in CSV and JSON files, so it works completely offline.
 
 ## Screenshots
 
@@ -31,39 +24,59 @@ Expense Tracker is a desktop application built with **Python**, **Tkinter**, and
 
 ![Expense Summary](screenshots/totals-window.png)
 
----
-
 ## Features
 
-* Add expenses with a **date**, **category**, **description**, and **amount**.
-* Create, rename, move, and delete categories and descriptions.
-* View all saved expenses in a table, with records organized by date.
-* View spending totals by month, year, category, and description.
-* Store all data locally in CSV and JSON files.
-* Simple and intuitive desktop interface built with Tkinter.
-
----
+- Add expenses with a date, category, description, and amount.
+- Select categories and descriptions from editable dropdown menus.
+- Add, rename, delete, and move categories and descriptions.
+- Automatically sort expense records chronologically.
+- View all saved expenses in a scrollable table.
+- View spending totals by month, year, category, and description.
+- View category totals by month and year.
+- Sort category and description summaries alphabetically or by amount.
+- Store expense records and category settings locally.
+- Automatically create the application's `data/` directory when needed.
 
 ## Technologies Used
 
-* Python 3.7
-* Tkinter
-* Pandas
-
----
+- Python
+- Tkinter and ttk
+- Pandas
+- JSON
+- Pathlib
 
 ## Requirements
 
-* Python **3.7**
-* pandas
+- Python
+- pandas
 
-Install the required package with:
+Install the required package:
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+Tkinter is included with most standard Python installations.
+
+## Installation
+
+1. Clone this repository.
+
+2. Open the project directory.
+
+3. Install the required dependency:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Run the application:
+
+   ```bash
+   python expense_tracker.py
+   ```
+
+The application automatically creates a `data/` directory beside the Python script if it does not already exist.
 
 ## Project Structure
 
@@ -83,35 +96,27 @@ expense-tracker-python/
 └── article.md
 ```
 
----
+The two files inside `data/` are created automatically when the application runs. They contain the user's expense records and category configuration.
 
-## Installation
+## Data Storage
 
-1. Clone this repository.
+The application uses two local files:
 
-2. Install the required dependency:
+- **expenses.csv** — stores expense dates, categories, descriptions, and amounts.
+- **categories.json** — stores categories and their associated descriptions.
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+The CSV file is sorted chronologically when expenses are saved. Category changes are stored in the JSON file and remain available when the application is restarted.
 
-3. Run the application:
-
-   ```bash
-   python expense_tracker.py
-   ```
-
----
+For a public repository, use fictional sample data rather than personal financial records.
 
 ## Future Improvements
 
-* Export expense summaries to Excel or PDF.
-* Add charts for spending by category and month.
-* Add a monthly budget and remaining balance tracker.
-* Add search and filtering by date, category, or description.
-* Add recurring monthly expenses.
-
----
+- Add charts for monthly and category-based spending.
+- Introduce monthly budgets and remaining-balance tracking.
+- Add search and filtering by date, category, or description.
+- Export expense summaries to Excel or PDF.
+- Add backup and restore functionality.
+- Support different currencies.
 
 ## License
 
